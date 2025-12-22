@@ -5,3 +5,5 @@
 !/poetry.lock
 genai-ws/docs
 genai-ws/tmp
+.venv
+__pycache__
