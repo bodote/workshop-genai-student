@@ -20,6 +20,10 @@ Starting with a minimalist RAG (Retrieval Augmented Generation) system, we consi
 various challenges and discuss suitable solutions. By the end, we will have an architecture 
 that can withstand the challenges of reality.
 
+## Contributing
+
+When translating notebooks to Java, follow the rules in `CONTRIBUTING.md` (keep notebooks unchanged, use jbang with picocli and google-genai, and base new Java files on `genai-ws/exercises/java/PromptEngineering.java`).
+
 ## Where can I find the corresponding slides?
 You will find the corresponding presentation on SpeakerDeck:
 * [From Zero to Production: Entwicklung einer eigenen GenAI Lösung (GERMAN)](https://speakerdeck.com/mobilelarson/from-zero-to-production-entwicklung-einer-eigenen-genai-losung)
