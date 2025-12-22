@@ -3,4 +3,5 @@
 !/pyproject.toml
 !/genai-ws/.env
 !/poetry.lock
-./genai-ws/docs
+genai-ws/docs
+genai-ws/tmp

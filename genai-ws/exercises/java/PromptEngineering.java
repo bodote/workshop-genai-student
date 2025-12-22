@@ -23,9 +23,17 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import static java.lang.System.out;
-
-@Command(name = "book_order", mixinStandardHelpOptions = true, version = "v0.1", description = "order a book")
-class BookOrder implements Callable<Integer> {
+/// # GenAI Workshop
+/// ## Lesson 2: Prompt Engineering
+///
+/// This lesson is intended to improve your prompt engineering skills.
+///
+/// During this lesson you will learn how to ...
+/// - use a system prompt to define model behaviour
+/// - extend system prompt to create workflows
+/// - specify output format
+@Command(name = "01_prompt_engineering", mixinStandardHelpOptions = true, version = "v0.1", description = "order a book")
+public class PromptEngineering implements Callable<Integer> {
 
     @Parameters(index = "0", description = "The greeting to print", defaultValue = "User!")
     private String greeting;
@@ -43,7 +51,7 @@ class BookOrder implements Callable<Integer> {
     private final List<Content> history = new ArrayList<>();
 
     public static void main(String... args) {
-        int exitCode = new CommandLine(new BookOrder()).execute(args);
+        int exitCode = new CommandLine(new PromptEngineering()).execute(args);
         System.exit(exitCode);
     }
 /**
@@ -89,8 +97,21 @@ class BookOrder implements Callable<Integer> {
         }
         return 0;
     }
-
-    private void runExercise01(Client client) throws Exception {
+/// ### Exercise 01: Flipped interaction
+/// Your task is to create a simple bookstore chatbot, which is able to gather more information about a book from a customer,
+/// if the customer did not provide enough information.
+///
+/// Imagine the following situation:
+/// A customer of a bookstore wants to buy a book, but provides almost no information.  
+/// The customer might ask an employee: *"I'm looking for this one book about a detective."*  
+/// The bookstore employee needs more information in order to help the customer. The employee might ask: "I'm sure I can help you, but I need more information. Do you know the name of the detective or do you know more about the content of the book?"
+///   
+/// The employee's reaction described here, should now be done by a chatbot. Your task is to provide a system prompt for this bot. 
+/// The bot should:  
+/// * Ask the customer for more information if the provided information is not enough for finding the book.
+/// @param client Google GenAI client used for completions
+/// @throws Exception if the API call fails
+    public void runExercise01(Client client) throws Exception {
         printSeparator("Exercise 01: Flipped interaction");
         String userPrompt = "I'm looking for this one book about a detective.";
         String systemPrompt = """
