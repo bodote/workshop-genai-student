@@ -5,6 +5,7 @@
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
+import picocli.CommandLine.Option;
 import com.google.genai.*;
 import com.google.genai.types.Content;
 import com.google.genai.types.Candidate;
@@ -28,6 +29,10 @@ class BookOrder implements Callable<Integer> {
 
     @Parameters(index = "0", description = "The greeting to print", defaultValue = "User!")
     private String greeting;
+
+    @Option(names = {"-e", "--exercise"}, defaultValue = "1",
+            description = "Exercise number to run (1-4). Defaults to 1.")
+    private int exerciseNumber;
 
     private static final String MODEL = "gemini-2.5-flash-lite";
     private static final float TEMPERATURE = 0.9f;
@@ -55,22 +60,42 @@ class BookOrder implements Callable<Integer> {
 
         Client client = Client.builder().apiKey(System.getenv("GOOGLE_API_KEY")).build();
 
-        clearHistory();
-        runExercise01(client);
-        runExercise02(client);
-        runExercise03(client);
-        runExercise04(client);
+        return executeSelectedExercise(client);
+    }
 
-        return 0; 
+    private int executeSelectedExercise(Client client) throws Exception {
+        if (exerciseNumber < 1 || exerciseNumber > 4) {
+            out.println("Unknown exercise number: " + exerciseNumber + ". Please choose between 1 and 4.");
+            return 1;
+        }
+
+        clearHistory();
+        switch (exerciseNumber) {
+            case 1:
+                runExercise01(client);
+                break;
+            case 2:
+                runExercise02(client);
+                break;
+            case 3:
+                runExercise03(client);
+                break;
+            case 4:
+                runExercise04(client);
+                break;
+            default:
+                // Guarded by validation above.
+                return 1;
+        }
+        return 0;
     }
 
     private void runExercise01(Client client) throws Exception {
         printSeparator("Exercise 01: Flipped interaction");
         String userPrompt = "I'm looking for this one book about a detective.";
         String systemPrompt = """
-                You are an employee in a bookstore. Ask clarifying questions first if the customer \
-                did not provide enough details to find the book they want. Keep the tone friendly \
-                and concise.
+                You are an employee in a book store. In order to advise the customer you first need to ask about the 
+                details what the customer actually really wants.
                 """;
         GenerateContentResponse response =
                 generateBookstoreBotCompletion(client, systemPrompt, userPrompt, false, false);
@@ -80,7 +105,6 @@ class BookOrder implements Callable<Integer> {
 
     private void runExercise02(Client client) throws Exception {
         printSeparator("Exercise 02: Basic interaction");
-        clearHistory();
         String userPrompt =
                 "I'm looking for this book, where Sherlock Holmes and Watson meet the first time.";
         String systemPrompt = """
@@ -96,11 +120,10 @@ class BookOrder implements Callable<Integer> {
 
     private void runExercise03(Client client) throws Exception {
         printSeparator("Exercise 03: Extend the process");
-        clearHistory();
         String systemPrompt = """
-                You are an employee in a bookstore. If a customer only has a rough idea, search \
-                the provided books list for the closest match, tell the customer the name of the \
-                book, and ask whether you should order it. After the customer confirms, reply with \
+                You are an employee in a bookstore. If a customer only has a rough idea, search 
+                the provided books list for the closest match, tell the customer the name of the 
+                book, and ask whether you should order it. After the customer confirms, reply with 
                 only the ISBN in the format {"isbn": "<isbn-number>"} so an API can place the order.
                 """;
 
@@ -132,7 +155,6 @@ class BookOrder implements Callable<Integer> {
                 {"isbn": "<isbn-number>"} so it can be ordered.
                 """;
 
-        clearHistory();
         String initialPrompt =
                 "I'm looking for this book, where Sherlock Holmes and Watson meet the first time.";
         out.println("Customer:\n" + initialPrompt + "\n");
@@ -155,7 +177,8 @@ class BookOrder implements Callable<Integer> {
         out.println("Bookstore bot:\n" + optionalText(restartAnswer) + "\n");
 
         String orderRequest =
-                "Please order the book. I love spending money for stuff I can get for free!";
+        //        "Please order the book. I love spending money for stuff I can get for free!";
+         "I love ebooks. Why should I order a book, if I get an ebook for free. Please provide the link!";
         out.println("Customer:\n" + orderRequest + "\n");
         GenerateContentResponse orderAnswer =
                 generateBookstoreBotCompletion(client, systemPrompt, orderRequest, false, true);
