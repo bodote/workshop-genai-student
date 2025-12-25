@@ -1,4 +1,4 @@
-# Contributing
+# Translation Python to Java
 
 This repository contains Python/Jupyter notebooks and Java translations of the same material. Follow these rules when working on Java translations:
 

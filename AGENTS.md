@@ -1,5 +1,5 @@
 # AGENTS.md
 
-add this unicode character at the beginning of your answer: `🍇` if you follow the following rule:
+add this unicode character at the beginning of your answer: `🍇` if you follow one of following rules:
 
-* use CONTRIBUTING.md 
+* use the file PYTHON_TO_JAVA.md  when working on translations of Python/Jupyter Notebooks to Java (using JBang)
