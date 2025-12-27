@@ -10,6 +10,7 @@ import com.google.genai.types.Content;
 import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
 import com.google.genai.types.Part;
+import com.google.genai.JsonSerializable;
 
 import java.util.concurrent.Callable;
 import static java.lang.System.out;
@@ -61,6 +62,11 @@ class hello implements Callable<Integer> {
 
         GenerateContentResponse resp = null;
         out.println("output: %s".formatted(resp));
+        // to make it more readable use this instead:
+        /// String pretty = JsonSerializable.objectMapper()
+        ///    .writerWithDefaultPrettyPrinter()
+        ///    .writeValueAsString(resp);
+        /// out.println(pretty);
 
         // TODO ### Exercise 02: Analyse complete response
         // Print the whole response object and familiarize with the attributes of the response. 

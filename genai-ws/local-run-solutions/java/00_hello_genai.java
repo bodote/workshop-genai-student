@@ -10,6 +10,7 @@ import com.google.genai.types.Content;
 import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
 import com.google.genai.types.Part;
+import com.google.genai.JsonSerializable;
 
 import java.util.concurrent.Callable;
 import static java.lang.System.out;
@@ -56,17 +57,21 @@ class hello implements Callable<Integer> {
                 .systemInstruction(Content.fromParts(Part.fromText(SYSTEM_PROMPT)))
                 .build();
 
-       // TODO: ### Exercise 01: Generate response by calling the generate_content method from client.models. 
-       // Use the model, user prompt and config as parameters.
+       // TODO: ### Exercise 01: Generate response by calling the generate_content method from `client.models...` 
+       // Use the `MODEL`, `USER_PROMPT` and `config` as parameters.
 
-        GenerateContentResponse resp = null;
-        out.println("output: %s".formatted(resp));
+        GenerateContentResponse resp = client.models.generateContent(MODEL, SYSTEM_PROMPT+USER_PROMPT, config);;
+        
+        String pretty = JsonSerializable.objectMapper()
+            .writerWithDefaultPrettyPrinter()
+            .writeValueAsString(resp);
+        out.println(pretty);
 
         // TODO ### Exercise 02: Analyse complete response
         // Print the whole response object and familiarize with the attributes of the response. 
         // You can have a look at the [documentation]
         // (https://ai.google.dev/api/generate-content#v1beta.GenerateContentResponse) for better understanding.
-
+        out.println("\n\nResponse text is:\n"+resp.candidates().get().get(0).content().get().parts().get().get(0).text().get());
         return 0; 
     }
 }
