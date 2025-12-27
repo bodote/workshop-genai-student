@@ -114,9 +114,9 @@ public class PromptEngineering implements Callable<Integer> {
     public void runExercise01(Client client) throws Exception {
         printSeparator("Exercise 01: Flipped interaction");
         String userPrompt = "I'm looking for this one book about a detective.";
+        ///TODO: Define the respective system prompt.
         String systemPrompt = """
-                You are an employee in a book store. In order to advise the customer you first need to ask about the 
-                details what the customer actually really wants.
+            <Define the respective system prompt.>
                 """;
         GenerateContentResponse response =
                 generateBookstoreBotCompletion(client, systemPrompt, userPrompt, false, false);
@@ -128,10 +128,9 @@ public class PromptEngineering implements Callable<Integer> {
         printSeparator("Exercise 02: Basic interaction");
         String userPrompt =
                 "I'm looking for this book, where Sherlock Holmes and Watson meet the first time.";
+        ///TODO: Define the respective system prompt.
         String systemPrompt = """
-                You are an employee in a bookstore. When a customer describes a book roughly, use \
-                the provided book list to identify the best match, share the title, publication \
-                year, and a short summary, then ask if you should order the book.
+                 <Define the respective system prompt.>
                 """;
         GenerateContentResponse response =
                 generateBookstoreBotCompletion(client, systemPrompt, userPrompt, false, false);
@@ -141,11 +140,9 @@ public class PromptEngineering implements Callable<Integer> {
 
     private void runExercise03(Client client) throws Exception {
         printSeparator("Exercise 03: Extend the process");
+        ///TODO: Define the respective system prompt.
         String systemPrompt = """
-                You are an employee in a bookstore. If a customer only has a rough idea, search 
-                the provided books list for the closest match, tell the customer the name of the 
-                book, and ask whether you should order it. After the customer confirms, reply with 
-                only the ISBN in the format {"isbn": "<isbn-number>"} so an API can place the order.
+                <Define the respective system prompt.>
                 """;
 
         String firstCustomerMessage =
@@ -161,19 +158,16 @@ public class PromptEngineering implements Callable<Integer> {
                 generateBookstoreBotCompletion(client, systemPrompt, customerAnswer, false, true);
         out.println("Bookstore bot:\n" + optionalText(secondBotAnswer) + "\n");
 
-        // Simulate calling the order API with the known Sherlock Holmes ISBN from the dataset.
-        orderBook("978-3-51593-12345-6");
+        /// TODO: Simulate calling the order API with the known Sherlock Holmes ISBN from the dataset.
+        orderBook("00-00-00");
         out.println();
     }
 
     private void runExercise04(Client client) throws Exception {
         printSeparator("Exercise 04: Give choices");
+        ///TODO: Define the respective system prompt.
         String systemPrompt = """
-                You are an employee in a bookstore. When a customer gives a rough description, \
-                pick the most appropriate book from the provided list. Share the title and ask \
-                whether to order a physical copy or provide an ebook link. If the user wants an \
-                ebook, share the URL from the data. If they want paper, respond with \
-                {"isbn": "<isbn-number>"} so it can be ordered.
+                 <Define the respective system prompt.>
                 """;
 
         String initialPrompt =
