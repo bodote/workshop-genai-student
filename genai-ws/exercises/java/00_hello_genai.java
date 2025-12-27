@@ -59,15 +59,13 @@ class hello implements Callable<Integer> {
 
        // TODO: ### Exercise 01: Generate response by calling the generate_content method from client.models. 
        // Use the model, user prompt and config as parameters.
-
         GenerateContentResponse resp = null;
-        out.println("output: %s".formatted(resp));
-        // to make it more readable use this instead:
+        // TODO: to make response more readable use this:
         /// String pretty = JsonSerializable.objectMapper()
         ///    .writerWithDefaultPrettyPrinter()
         ///    .writeValueAsString(resp);
-        /// out.println(pretty);
-
+        /// out.println("\nResponse:\n"+pretty);
+        
         // TODO ### Exercise 02: Analyse complete response
         // Print the whole response object and familiarize with the attributes of the response. 
         // You can have a look at the [documentation]
