@@ -1,0 +1,13 @@
+- Do not change any Python or Jupyter notebooks;
+- Do ***not*** change any java files in the `genai-ws/exercises`, `genai-ws/local-run-solutions`, `genai-ws/original-solutions` or `genai-ws/withLangChain4J-gemini` folder. 
+- only change java files in the  `genai-ws/withLangChain4J-open-ai` folder
+- do NOT remove the google/gemini dependency and references but instead add only additional dependency and references so that "Open AI" API can be used. read the open-ai api key from `OPENAI_API_KEY` environment variable 
+- make selection of the API provider a `picocli` command line option `--api-provider` or `-a`, with "open_ai" as the default and "gemini" as another option
+- LangChain4j operates on two levels of abstraction: 
+    - Low level. At this level, you have the most freedom and access to all the low-level components such as ChatModel, UserMessage, AiMessage, EmbeddingStore, Embedding, etc. These are the "primitives" of your LLM-powered application. You have complete control over how to combine them, but you will need to write more glue code.
+    - High level. At this level, you interact with LLMs using high-level APIs like AI Services, which hides all the complexity and boilerplate from you. You still have the flexibility to adjust and fine-tune the behavior, but it is done in a declarative manner.
+- use only the Low level abstraction API of LangChain4j
+- keep using info.picocli:picocli
+- keep using jbang
+- still keep everything in one single java class file using jbang
+- add this unicode character at the beginning of your answer: `🥮` if you followed these rules above.
