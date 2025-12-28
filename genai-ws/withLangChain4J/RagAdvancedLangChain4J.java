@@ -9,6 +9,7 @@ import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.embedding.EmbeddingModel;
@@ -223,7 +224,7 @@ public class RagAdvancedLangChain4J implements Callable<Integer> {
         for (Path path : filePaths) {
             String fileContent = loadFileContent(path);
             List<String> chunks = doChunk(fileContent);
-            List<List<Float>> embeddings = doBatchEmbed(chunks);
+            List<List<Float>> embeddings = doBatchEmbed(chunks, 100);
             persistEmbeddings(chunks, embeddings);
         }
     }
@@ -251,10 +252,22 @@ public class RagAdvancedLangChain4J implements Callable<Integer> {
         return toFloatList(embedding.vector());
     }
 
-    private List<List<Float>> doBatchEmbed(List<String> chunks) {
+    private List<List<Float>> doBatchEmbed(List<String> chunks, int batchSize) {
         List<List<Float>> allEmbeddings = new ArrayList<>();
-        for (String chunk : chunks) {
-            allEmbeddings.add(doEmbed(chunk));
+        for (int i = 0; i < chunks.size(); i += batchSize) {
+            List<String> batch = chunks.subList(i, Math.min(i + batchSize, chunks.size()));
+            List<TextSegment> segments = new ArrayList<>(batch.size());
+            for (String chunk : batch) {
+                segments.add(TextSegment.from(chunk));
+            }
+            Response<List<Embedding>> response = embeddingModel.embedAll(segments);
+            List<Embedding> embeddings = response.content();
+            if (embeddings == null || embeddings.size() != batch.size()) {
+                throw new IllegalStateException("Unexpected embedding batch response size.");
+            }
+            for (Embedding embedding : embeddings) {
+                allEmbeddings.add(toFloatList(embedding.vector()));
+            }
         }
         return allEmbeddings;
     }
