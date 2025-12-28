@@ -105,6 +105,7 @@ public class RagAdvancedLangChain4J implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
+        var time = System.currentTimeMillis();
         ApiConfig apiConfig = resolveApiConfig();
         if (apiConfig == null) {
             return 1;
@@ -118,6 +119,8 @@ public class RagAdvancedLangChain4J implements Callable<Integer> {
         }
 
         doIngestion(List.of(BOOK_PATH));
+        out.println("\n Time(sec) for ingestion:"+(System.currentTimeMillis()-time)/1000f);
+        time = System.currentTimeMillis();
         switch (exerciseNumber) {
             case 1:
                 runExercise01();
@@ -134,6 +137,7 @@ public class RagAdvancedLangChain4J implements Callable<Integer> {
             default:
                 return 1;
         }
+        out.println("\n Time(sec) for answering:"+(System.currentTimeMillis()-time)/1000f);
         return 0;
     }
 
