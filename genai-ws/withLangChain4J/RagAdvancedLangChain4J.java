@@ -41,7 +41,7 @@ import static java.lang.System.out;
 /// - hold back unacceptable model output using an output guardrail
 /// - hold back model output, which is not grounded by the retrieved context, using a fact checking output guardrail
 @Command(name = "03_rag_advanced", mixinStandardHelpOptions = true, version = "v0.1", description = "advanced rag guardrails")
-public class RagAdvanced implements Callable<Integer> {
+public class RagAdvancedLangChain4J implements Callable<Integer> {
 
     @Option(names = {"-e", "--exercise"}, defaultValue = "1",
             description = "Exercise number to run (1-4). Defaults to 1.")
@@ -81,7 +81,7 @@ public class RagAdvanced implements Callable<Integer> {
     private final InMemoryVectorStore vectorStore = new InMemoryVectorStore();
 
     public static void main(String... args) {
-        int exitCode = new CommandLine(new RagAdvanced()).execute(args);
+        int exitCode = new CommandLine(new RagAdvancedLangChain4J()).execute(args);
         System.exit(exitCode);
     }
 
