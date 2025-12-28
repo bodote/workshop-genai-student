@@ -3,6 +3,7 @@
 //DEPS dev.langchain4j:langchain4j:1.10.0
 //DEPS dev.langchain4j:langchain4j-google-ai-gemini:1.10.0
 //DEPS dev.langchain4j:langchain4j-open-ai:1.10.0
+//DEPS dev.langchain4j:langchain4j-mistral-ai:1.10.0
 //DEPS ch.qos.logback:logback-classic:1.4.14
 
 import dev.langchain4j.data.embedding.Embedding;
@@ -18,6 +19,8 @@ import dev.langchain4j.model.googleai.GoogleAiEmbeddingModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
+import dev.langchain4j.model.mistralai.MistralAiChatModel;
+import dev.langchain4j.model.mistralai.MistralAiEmbeddingModel;
 import dev.langchain4j.model.output.Response;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -62,11 +65,12 @@ public class RagAdvancedLangChain4J implements Callable<Integer> {
     private boolean verbose;
 
     @Option(names = {"-a", "--api-provider"}, defaultValue = "open_ai",
-            description = "API provider to use: open_ai or gemini.")
+            description = "API provider to use: open_ai, gemini, or mistral.")
     private String apiProvider;
 
     private static final String API_PROVIDER_OPEN_AI = "open_ai";
     private static final String API_PROVIDER_GEMINI = "gemini";
+    private static final String API_PROVIDER_MISTRAL = "mistral";
 
     private static final String GOOGLE_GENERATION_MODEL = "gemini-2.5-flash-lite";
     private static final String GOOGLE_EMBEDDING_MODEL = "text-embedding-004";
@@ -74,6 +78,9 @@ public class RagAdvancedLangChain4J implements Callable<Integer> {
     private static final String OPENAI_GENERATION_MODEL = "gpt-4o-mini";
     private static final String OPENAI_EMBEDDING_MODEL = "text-embedding-3-small";
     private static final String OPENAI_GUARDING_MODEL = "gpt-4o-mini";
+    private static final String MISTRAL_GENERATION_MODEL = "mistral-small-latest";
+    private static final String MISTRAL_EMBEDDING_MODEL = "mistral-embed";
+    private static final String MISTRAL_GUARDING_MODEL = "mistral-small-latest";
 
     private static final double DEFAULT_CONFIG_TEMPERATURE = 0.9;
     private static final int DEFAULT_CONFIG_TOP_K = 1;
@@ -209,6 +216,14 @@ public class RagAdvancedLangChain4J implements Callable<Integer> {
                     .maxTokens(DEFAULT_CONFIG_MAX_OUTPUT_TOKENS)
                     .build();
         }
+        if (API_PROVIDER_MISTRAL.equals(apiConfig.provider())) {
+            return MistralAiChatModel.builder()
+                    .apiKey(apiConfig.apiKey())
+                    .modelName(apiConfig.modelName())
+                    .temperature(DEFAULT_CONFIG_TEMPERATURE)
+                    .maxTokens(DEFAULT_CONFIG_MAX_OUTPUT_TOKENS)
+                    .build();
+        }
         return GoogleAiGeminiChatModel.builder()
                 .apiKey(apiConfig.apiKey())
                 .modelName(apiConfig.modelName())
@@ -221,6 +236,12 @@ public class RagAdvancedLangChain4J implements Callable<Integer> {
     private EmbeddingModel createEmbeddingModel(ApiConfig apiConfig) {
         if (API_PROVIDER_OPEN_AI.equals(apiConfig.provider())) {
             return OpenAiEmbeddingModel.builder()
+                    .apiKey(apiConfig.apiKey())
+                    .modelName(apiConfig.embeddingModel())
+                    .build();
+        }
+        if (API_PROVIDER_MISTRAL.equals(apiConfig.provider())) {
+            return MistralAiEmbeddingModel.builder()
                     .apiKey(apiConfig.apiKey())
                     .modelName(apiConfig.embeddingModel())
                     .build();
@@ -713,6 +734,9 @@ public class RagAdvancedLangChain4J implements Callable<Integer> {
             if (API_PROVIDER_OPEN_AI.equals(provider)) {
                 return new ApiConfig(provider, apiKey, OPENAI_GUARDING_MODEL, embeddingModel);
             }
+            if (API_PROVIDER_MISTRAL.equals(provider)) {
+                return new ApiConfig(provider, apiKey, MISTRAL_GUARDING_MODEL, embeddingModel);
+            }
             return new ApiConfig(provider, apiKey, GOOGLE_GUARDING_MODEL, embeddingModel);
         }
     }
@@ -735,7 +759,15 @@ public class RagAdvancedLangChain4J implements Callable<Integer> {
             }
             return new ApiConfig(provider, apiKey, GOOGLE_GENERATION_MODEL, GOOGLE_EMBEDDING_MODEL);
         }
-        out.println("Unknown API provider: " + provider + ". Use open_ai or gemini.");
+        if (API_PROVIDER_MISTRAL.equals(provider)) {
+            String apiKey = System.getenv("MISTRAL_API_KEY");
+            if (apiKey == null || apiKey.isEmpty()) {
+                out.println("MISTRAL_API_KEY is required to run this exercise with mistral.");
+                return null;
+            }
+            return new ApiConfig(provider, apiKey, MISTRAL_GENERATION_MODEL, MISTRAL_EMBEDDING_MODEL);
+        }
+        out.println("Unknown API provider: " + provider + ". Use open_ai, gemini, or mistral.");
         return null;
     }
 }
