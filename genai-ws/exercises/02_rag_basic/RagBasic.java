@@ -96,9 +96,9 @@ public class RagBasic implements Callable<Integer> {
         return 0;
     }
 
-    /// ## Generate response without internal knowledge
+    /// DEMO (as Exercise01): Generate response without internal knowledge
     private void runWithoutContext(Client client) {
-        printSeparator("Generate response without internal knowledge");
+        printSeparator("DEMO (as Exercise01): Generate response without internal knowledge");
         String firstPrompt = "Lucy noticed a number on the ceiling when taking breakfast. Which number was written into the ceiling?";
         GenerateContentResponse firstResponse =
                 client.models.generateContent(DEFAULT_GEMINI_MODEL, firstPrompt, defaultGenerationConfig());
@@ -114,7 +114,7 @@ public class RagBasic implements Callable<Integer> {
         out.println();
     }
 
-    /// ### Exercise 01: Create RAG pipeline
+    /// ### Exercise 02: Create RAG pipeline
     private void runRagPipeline(Client client) {
         printSeparator("Exercise 01: Create RAG pipeline");
         doIngestion(client, List.of(BOOK_PATH));
@@ -150,8 +150,10 @@ public class RagBasic implements Callable<Integer> {
 
     private void doRag(Client client, String userInput, boolean verboseOutput) {
         out.println("Question:\n" + userInput);
-        List<Float> userInputEmbedding = doEmbed(client, userInput);
-        List<String> context = doTopKFetching(userInputEmbedding, DEFAULT_K);
+        /// TODO: Embed the user input
+        List<Float> userInputEmbedding = null;
+        /// TODO: "R" like "Retrieval": Get the k semantically closest chunks to the user input from the knowledgebase
+        List<String> context = null;
         if (verboseOutput) {
             out.println("Retrieved context:");
             for (String chunk : context) {
@@ -159,11 +161,13 @@ public class RagBasic implements Callable<Integer> {
             }
             out.println();
         }
-        String augmentedPrompt = augment(userInput, context);
+        /// TODO: "A" like "Augmented": Create the augmented prompt
+        String augmentedPrompt = null;
         if (verboseOutput) {
             out.println("Augmented prompt:\n" + augmentedPrompt);
         }
-        String response = generateGeminiCompletion(client, augmentedPrompt);
+        /// TODO: "G" like "Generation": Generate a response
+        String response = null;
         out.println("Response:\n" + response);
     }
 
