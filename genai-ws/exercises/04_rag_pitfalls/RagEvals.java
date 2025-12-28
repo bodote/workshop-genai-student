@@ -91,7 +91,7 @@ public class RagEvals implements Callable<Integer> {
         }
         return 0;
     }
-
+    /// DEMO (as exercise01): Measure the performance of the retrieval without ingesting the 2nd book
     private void runExercise01(Client client) {
         printSeparator("Exercise 01: Evaluate RAG");
         Set<String> knowledgebaseContent = new LinkedHashSet<>();
@@ -116,24 +116,23 @@ public class RagEvals implements Callable<Integer> {
         printMetrics(metrics);
     }
 
-    /// ### Exercise 01: Evaluate RAG (again)
+    /// ### Exercise 02: Evaluate RAG (again) with 2nd book
     private void runExercise02(Client client) {
-        printSeparator("Exercise 01: Evaluate RAG (again)");
+        printSeparator("Exercise 02: Evaluate RAG (again)");
         Set<String> knowledgebaseContent = new LinkedHashSet<>();
         knowledgebaseContent.add("study_in_scarlett.txt");
         knowledgebaseContent.add("adventures_of_sherlock_holmes.txt");
         doIngestion(client, knowledgebaseContent, DEFAULT_CHUNK_SIZE, true, false);
 
         /// TODO: Evaluate the retrieval performance
-        EvaluationMetrics metrics = evaluateRetrieval(client, topK);
-
+        
         /// TODO: Print the results
-        printMetrics(metrics);
+       
     }
 
-    /// ### Exercise 02: Optimize RAG
+    /// ### Exercise 03: Optimize RAG
     private void runExercise03(Client client) {
-        printSeparator("Exercise 02: Optimize RAG");
+        printSeparator("Exercise 03: Optimize RAG");
         Set<String> knowledgebaseContent = new LinkedHashSet<>();
         knowledgebaseContent.add("study_in_scarlett.txt");
         knowledgebaseContent.add("adventures_of_sherlock_holmes.txt");
